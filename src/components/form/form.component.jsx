@@ -32,7 +32,7 @@ export const ReactForm = props => {
       {props.errorMessage}
       </Form.Text>
       <Button type="submit" style={{ float: "right" }} variant="dark">
-        Log in
+        {props.submitButtonText}
       </Button>
     </Form>
   );

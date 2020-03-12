@@ -45,7 +45,7 @@ class Auth extends React.Component {
     };
   }
   render() {
-    return <LoginForm errorMessage={this.state.errorMessage} handleSubmit={this.handleSubmit} />;
+    return <LoginForm errorMessage={this.state.errorMessage} handleSubmit={this.handleSubmit} submitButtonText={"Log In"}/>;
   }
 }
 export default Auth;

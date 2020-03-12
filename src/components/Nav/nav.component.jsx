@@ -5,9 +5,7 @@ import './nav.styles.scss';
 class Nav extends React.Component {
   logOutHandler = () => {
     // localStorage.clear();
-    const { history } = this.props;
-    console.log(history);
-        
+    console.log(this.props);
   };
   render() {
     return (
