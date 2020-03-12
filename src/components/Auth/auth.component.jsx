@@ -1,4 +1,5 @@
 import React from "react";
+
 import LoginForm from "../LoginForm/loginForm.component";
 
 class Auth extends React.Component {
@@ -21,9 +22,22 @@ class Auth extends React.Component {
         }),
         headers: { "content-type": "application/json" }
       })
-        .then(response=> response.json())
+        .then(response => response.json())
         .then(data => {
-          console.log(data);
+          const { error } = data;
+          if (error) {
+            this.setState({
+              errorMessage: error,
+              email: email,
+              password: password
+            });
+          } else {
+            const { history } = this.props;
+            const { user, jwt } = data;
+            localStorage.setItem("currentUserToken", jwt);
+            localStorage.setItem("user", JSON.stringify(user));
+            history.push("/");
+          }
           //   users.push(data);
           //   this.setState({ users: users });
         })
@@ -31,7 +45,7 @@ class Auth extends React.Component {
     };
   }
   render() {
-    return <LoginForm handleSubmit={this.handleSubmit} />;
+    return <LoginForm errorMessage={this.state.errorMessage} handleSubmit={this.handleSubmit} />;
   }
 }
 export default Auth;

@@ -1,0 +1,12 @@
+.nav-buttons-right{
+    float: right;
+     margin: 20px;
+    button{
+        margin-right: 10px;
+    }
+}
+.nav-buttons-right:last-child{
+    button{
+        margin-right: 0;
+    }
+}
