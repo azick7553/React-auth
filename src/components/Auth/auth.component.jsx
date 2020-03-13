@@ -35,7 +35,7 @@ class Auth extends React.Component {
             const { history } = this.props;
             const { user, jwt } = data;
             localStorage.setItem("currentUserToken", jwt);
-            localStorage.setItem("user", JSON.stringify(user));
+            this.props.setUser(user);
             history.push("/");
           }
           //   users.push(data);

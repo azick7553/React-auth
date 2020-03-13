@@ -7,12 +7,12 @@ class Portfolio extends React.Component {
   constructor() {
     super();
     this.state = {
-      userId:0,
+      userId: 0,
       balance: "",
       portfolio: [],
       errorMessage: "",
-      ticker:"",
-      qty:""
+      ticker: "",
+      qty: ""
     };
     this.inputChangeHandler = e => {
       e.preventDefault();
@@ -21,34 +21,53 @@ class Portfolio extends React.Component {
     this.handleSubmit = (event, data) => {
       event.preventDefault();
       const { ticker, qty } = data;
-      
-      fetch("http://localhost:3000/login", {
+
+      fetch("http://localhost:3000/transactions", {
         method: "POST",
         body: JSON.stringify({
           ticker: ticker,
           qty: qty,
-          user_id:this.state.userId
+          user_id: this.state.userId
         }),
         headers: { "content-type": "application/json" }
-      }).then(response=> response.json())
-      .then(portfolio=>{
-        this.setState({portfolio:portfolio});
-      });
+      })
+        .then(response => response.json())
+        .then(responsePortfolio => {
+          console.log(responsePortfolio);
+          
+          let { portfolio } = this.state;
+          portfolio.push(responsePortfolio);
+
+          var result = [];
+          portfolio.reduce(function(res, value) {
+            if (!res[value.ticker]) {
+              res[value.ticker] = { ticker: value.ticker, shares: 0, price:0 };
+              result.push(res[value.ticker]);
+            }
+            res[value.ticker].shares += value.shares;
+            res[value.ticker].price += value.price;
+            return res;
+          }, {});
+
+          this.setState({ portfolio: result });
+        });
     };
   }
   componentDidMount() {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      const { balance } = user.data.attributes;
+    const { id, attributes } = this.props.user;
+
+    if (attributes) {
+      const { balance } = attributes;
+      console.log(balance);
       this.setState({ balance: balance });
-      fetch(`http://localhost:3000/portfolio/${user.data.id}`, {
+      fetch(`http://localhost:3000/portfolio/${id}`, {
         method: "GET"
       })
         .then(response => response.json())
         .then(portfolio => {
           this.setState({ portfolio: portfolio });
         });
-        this.setState({userId:user.data.id});
+      this.setState({ userId: id });
     }
   }
   render() {
@@ -76,7 +95,6 @@ class Portfolio extends React.Component {
         ariaLabel: "Qty"
       }
     ];
-    console.log(this.state.portfolio);
     return (
       <div>
         <Nav history={this.props} />
