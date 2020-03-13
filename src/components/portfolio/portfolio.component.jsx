@@ -7,7 +7,6 @@ class Portfolio extends React.Component {
   constructor() {
     super();
     this.state = {
-      userId: 0,
       balance: "",
       portfolio: [],
       errorMessage: "",
@@ -34,14 +33,14 @@ class Portfolio extends React.Component {
         .then(response => response.json())
         .then(responsePortfolio => {
           console.log(responsePortfolio);
-          
+
           let { portfolio } = this.state;
           portfolio.push(responsePortfolio);
 
           var result = [];
           portfolio.reduce(function(res, value) {
             if (!res[value.ticker]) {
-              res[value.ticker] = { ticker: value.ticker, shares: 0, price:0 };
+              res[value.ticker] = { ticker: value.ticker, shares: 0, price: 0 };
               result.push(res[value.ticker]);
             }
             res[value.ticker].shares += value.shares;
@@ -55,20 +54,18 @@ class Portfolio extends React.Component {
   }
   componentDidMount() {
     const { id, attributes } = this.props.user;
+    console.log(this.props.user);
 
-    if (attributes) {
-      const { balance } = attributes;
-      console.log(balance);
-      this.setState({ balance: balance });
-      fetch(`http://localhost:3000/portfolio/${id}`, {
-        method: "GET"
-      })
-        .then(response => response.json())
-        .then(portfolio => {
-          this.setState({ portfolio: portfolio });
-        });
-      this.setState({ userId: id });
-    }
+    const { balance } = attributes;
+    console.log(balance);
+    this.setState({ balance: balance });
+    fetch(`http://localhost:3000/portfolio/${id}`, {
+      method: "GET"
+    })
+      .then(response => response.json())
+      .then(portfolio => {
+        this.setState({ portfolio: portfolio });
+      });
   }
   render() {
     const inputs = [
